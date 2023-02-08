@@ -26,8 +26,8 @@ jobs:
           #  两行一组，删除不需要的版本
 
           - platform: ds918p
-            version: 7.1.0-42661
-
+            version: 7.0.1-42218
+            
     steps:
       - name: 检出项目文件
         uses: actions/checkout@v3
@@ -58,7 +58,7 @@ jobs:
           cp sample_user_config.json ${{matrix.platform}}_user_config.json
 
           # 调整VID和PID
-          sed -i -e 's/0x0001/0x88AA/g' -e 's/0x46f4/0x88AA/g' ${{matrix.platform}}_user_config.json
+          sed -i -e 's/0x0583/0x88AA/g' -e 's/0x152D/0x88AA/g' ${{matrix.platform}}_user_config.json
 
           # 调整SN和MAC,最好使用 actions secrets 引入,SN应该是固定值不应该每次生成
           sn=`./redpill_tool_chain.sh sn ${{matrix.platform}} | grep 'Serial Number' | awk '{print $3}'`
@@ -78,13 +78,9 @@ jobs:
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-acpid.json
           ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json
-          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json
-          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-acpid.json
-          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json
-          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-misc.json
-          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/e1000/rpext-index.json
-          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/r8125/rpext-index.json
-
+          ./redpill_tool_chain add https://raw.githubusercontent.com/pocopico/rp-ext/main/e1000e/rpext-index.json
+          ./redpill_tool_chain add https://raw.githubusercontent.com/pocopico/rp-ext/main/r8125/rpext-index.json
+          ./redpill_tool_chain add https://raw.githubusercontent.com/pocopico/rp-ext/main/r8168/rpext-index.json
       - name: 添加扩展驱动[dva3221]
         if: matrix.platform == 'dva3221'
         run: |
